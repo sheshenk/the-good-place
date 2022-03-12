@@ -1,33 +1,32 @@
-import './App.css';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import { CssBaseline } from '@mui/material';
-import { Box } from '@mui/system';
-import AppDrawer from './components/AppDrawer/AppDrawer';
-import { MainContainer } from './components/MainContainer/MainContainer';
-import { BrowserRouter } from "react-router-dom";
-import { AppRoutes } from './routes/AppRoutes';
+import { useSelector } from 'react-redux';
 
-const drawerWidth = 220
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
-const MakeComponent = ({ title, children }) => {
-  <MainContainer title={title} drawerWidth={drawerWidth}>
-    {children}
-  </MainContainer>
-}
+// routing
+import Routes from 'routes';
 
-function App() {
-  return (
-    <Box sx={{ display: `flex` }}>
-      <BrowserRouter>
-        <CssBaseline />
-        <AppDrawer dwidth={drawerWidth} />
-        <AppRoutes dwidth={drawerWidth}/>
-      </BrowserRouter>
-    </Box>
-  );
-}
+// defaultTheme
+import themes from 'themes';
+
+// project imports
+import NavigationScroll from 'layout/NavigationScroll';
+
+// ==============================|| APP ||============================== //
+
+const App = () => {
+    const customization = useSelector((state) => state.customization);
+
+    return (
+        <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={themes(customization)}>
+                <CssBaseline />
+                <NavigationScroll>
+                    <Routes />
+                </NavigationScroll>
+            </ThemeProvider>
+        </StyledEngineProvider>
+    );
+};
 
 export default App;
