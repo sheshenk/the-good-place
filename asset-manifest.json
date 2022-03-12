@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/the-good-place/static/css/main.4b3f997e.css",
-    "main.js": "/the-good-place/static/js/main.5ca22210.js",
+    "main.js": "/the-good-place/static/js/main.268e1447.js",
     "static/media/roboto-all-500-normal.woff": "/the-good-place/static/media/roboto-all-500-normal.52cb737b682eb9661ee1.woff",
     "static/media/roboto-all-700-normal.woff": "/the-good-place/static/media/roboto-all-700-normal.ef6d1d09b20b877fee4e.woff",
     "static/media/roboto-all-400-normal.woff": "/the-good-place/static/media/roboto-all-400-normal.376ea5d93f71583052f6.woff",
@@ -36,10 +36,10 @@
     "static/media/roboto-greek-ext-700-normal.woff2": "/the-good-place/static/media/roboto-greek-ext-700-normal.9674bc0ae12c2551d9d1.woff2",
     "index.html": "/the-good-place/index.html",
     "main.4b3f997e.css.map": "/the-good-place/static/css/main.4b3f997e.css.map",
-    "main.5ca22210.js.map": "/the-good-place/static/js/main.5ca22210.js.map"
+    "main.268e1447.js.map": "/the-good-place/static/js/main.268e1447.js.map"
   },
   "entrypoints": [
     "static/css/main.4b3f997e.css",
-    "static/js/main.5ca22210.js"
+    "static/js/main.268e1447.js"
   ]
 }
