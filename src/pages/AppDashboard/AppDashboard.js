@@ -1,4 +1,5 @@
 import BarGraph from "../../components/BarGraph/BarGraph"
+import { MainContainer } from "../../components/MainContainer/MainContainer";
 
 const data = [
     {
@@ -47,7 +48,9 @@ const data = [
 
 function AppDashboard(props) {
     return (
-        <BarGraph data={data} />
+        <MainContainer title='Dashboard' drawerWidth={props.drawerWidth}>
+            <BarGraph data={data} />
+        </MainContainer>
     )
 }
 export default AppDashboard

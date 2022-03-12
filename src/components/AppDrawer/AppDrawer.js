@@ -1,4 +1,4 @@
-import { Divider, Drawer, Toolbar, List } from '@mui/material';
+import { Divider, Drawer, Toolbar, List, Link } from '@mui/material';
 import { AccountCircle, ChromeReaderMode, Dashboard, FormatListBulleted, TokenRounded } from '@mui/icons-material';
 import logo from './logo.png'
 import { AppDrawerItem } from '../AppDrawerItem/AppDrawerItem';
@@ -17,7 +17,9 @@ function AppDrawer(props) {
       anchor="left"
     >
       <Toolbar>
-        <img src={logo} alt='logo' />
+        <Link to='/'>
+          <img src={logo} alt='logo' />
+        </Link>
       </Toolbar>
       <Divider />
       <List>

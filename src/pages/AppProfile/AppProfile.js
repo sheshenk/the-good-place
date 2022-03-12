@@ -1,6 +1,10 @@
+import { MainContainer } from "../../components/MainContainer/MainContainer"
+
 function AppProfile(props) {
     return(
-        <div>Prof</div>
+        <MainContainer title='Profile' drawerWidth={props.drawerWidth}>
+            <div>Prof</div>
+        </MainContainer>
     )
 }
 export default AppProfile
