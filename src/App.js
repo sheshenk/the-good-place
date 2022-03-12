@@ -12,12 +12,6 @@ import { AppRoutes } from './routes/AppRoutes';
 
 const drawerWidth = 220
 
-const MakeComponent = ({ title, children }) => {
-  <MainContainer title={title} drawerWidth={drawerWidth}>
-    {children}
-  </MainContainer>
-}
-
 function App() {
   return (
     <Box sx={{ display: `flex` }}>
