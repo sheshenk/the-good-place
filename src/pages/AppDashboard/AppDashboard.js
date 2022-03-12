@@ -1,5 +1,4 @@
 import BarGraph from "../../components/BarGraph/BarGraph"
-import { MainContainer } from "../../components/MainContainer/MainContainer";
 
 const data = [
     {
