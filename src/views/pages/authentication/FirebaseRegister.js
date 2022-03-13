@@ -55,34 +55,31 @@ const FirebaseRegister = ({ ...others }) => {
         }
     };
 
-    const handleRegister = async (name, email, password, skills, otherSkill, prefs) => {
-        const addNameAndDetails = (name) => () => firebaseSvc.addUserName(name, () => {
-            console.log("User Name Added");
-            let user = {
-                name: name,
-                email: email,
-                hours: 0
-            };
-            user["otherSkill"] = otherSkill;
-            skills.forEach(skill => user[skill] = true);
-            prefs.forEach(pref => user[pref] = true);
-            firebaseSvc.addUserToDb(user);
-            registerSuccess(user);
-        },
-        registerFailure);
+    const addNameAndDetails = (name, skills, otherSkill, prefs) => () => firebaseSvc.addUserName(name, () => {
+        console.log("User Name Added");
+        let user = {
+            name: name,
+            email: email,
+            hours: 0
+        };
+        user["otherSkill"] = otherSkill;
+        skills.forEach(skill => user[skill] = true);
+        prefs.forEach(pref => user[pref] = true);
+        firebaseSvc.addUserToDb(user, registerSuccess(user), registerFailure);
+    },
+    registerFailure);
 
-        await firebaseSvc.createUser({email: email, password: password}, addNameAndDetails(name), registerFailure);
+    const handleRegister = async (name, email, password, skills, otherSkill, prefs) => {
+        await firebaseSvc.createUser({email: email, password: password}, addNameAndDetails(name, skills, otherSkill, prefs), registerFailure);
     };
 
     /**
      * Callback Function if the register is successful.
      */
-    const registerSuccess = (user) => {
+    const registerSuccess = (user) => () => {
         console.log("Account successfully created!");
         firebaseSvc.matchProjectCurrentUser(user);
         window.location.href = "/";
-        //TODO: Match with Project
-        //TODO: Redirect to dashboard
     };
 
     /**
