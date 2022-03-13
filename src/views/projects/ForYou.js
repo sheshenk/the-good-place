@@ -53,6 +53,7 @@ const ForYou = () => {
     const [projs, setProjs] = useState([])
 
     useEffect(() => {
+<<<<<<< Updated upstream
         const getProjs = async () => {
             const projs = await firebaseSvc.allProjectsFromDb((snapshot) => {
                 let projs = snapshot.val()
@@ -61,6 +62,19 @@ const ForYou = () => {
         }
         getProjs()
     }, [])
+=======
+        const getProjs = async() => {
+            const projs = firebaseSvc.db
+            console.log(projs)
+            if (projs) {
+                
+                setProjs(projs)
+            }
+            
+        }
+        getProjs()
+     }, [])
+>>>>>>> Stashed changes
 
     if (!loggedIn) return <Navigate to='/pages/login/login3' />
 
