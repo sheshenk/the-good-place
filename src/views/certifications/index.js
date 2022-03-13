@@ -8,15 +8,13 @@ import { Button, CardActionArea, CardActions, Grid } from '@mui/material';
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
 
-// ==============================|| SAMPLE PAGE ||============================== //
-
 const Certificate = ({props}) => (
 
-    <Card sx={{ maxWidth: 345, maxHeight: 400 }}>
+    <Card sx={{ maxWidth: 345}}>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
+          height="194"
           image=""
           alt="certificate"
         />
@@ -49,14 +47,17 @@ const Certifications = () => {
     const [certificates, setCertificates] = useState([]);
 
     useEffect(() => {
-      const certificates = firebaseSvc.getAllCertificatesFromDb();
-      setCertificates(certificates);
-      return () => firebaseSvc.certsRefOff();
-      
+      firebaseSvc.getAllCertificatesFromDb(
+        (snap) => {
+          const certificates = Object.values(snap.val());
+          setCertificates(certificates);
+          return () => firebaseSvc.certsRefOff();
+        }
+      );
     }, []);
 
     return (
-      <Grid container>
+      <Grid item xs={3}>
         {
           certificates.map(cert => (
             <Certificate props={cert}>
