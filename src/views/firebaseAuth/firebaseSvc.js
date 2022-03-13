@@ -1,9 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from './firebaseDetails';
-import { getDatabase, ref, set, update, onValue } from "firebase/database";
+import { firebaseConfig } from './firebaseDetails.js';
+import { getDatabase, ref, set, update, onValue, get } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from 'react';
-import { prefList, skillList } from "views/utilities/Constants";
+import { prefList, skillList } from "../utilities/Constants.js";
 
 const firebase = initializeApp(firebaseConfig);
 const db = getDatabase(firebase);
@@ -108,6 +108,16 @@ class FirebaseSvc {
 
   // DB OPERATIONS
 
+  currentUser = () => {
+    if (!auth.currentUser) {
+      return {};
+    } else {
+      const uid = auth.currentUser.uid;
+      const user = get(this.userRef(uid)).then(snapshot => snapshot.val()).catch(console.error);
+      return user;
+    }
+  }
+
   addUserToDb = async(user, success, failure)  => {
     const userRef = this.userRef(auth.currentUser.uid);
     set(userRef, user)
@@ -131,13 +141,13 @@ class FirebaseSvc {
   updateUserProject = async(proj) => {
     const userRef = this.userRef(auth.currentUser.uid);
     const updates = {};
-    updates['/Users/' + auth.currentUser.uid + '/project/'] = proj;
+    updates['/project/'] = proj;
     return update(userRef, updates);
   }
 
-  allProjectsFromDb = async() => {
+  allProjectsFromDb = async(callback) => {
     const projectRef = this.projectRef('');
-    return onValue(projectRef, (snapshot) => snapshot.val());
+    return onValue(projectRef, callback);
   }
 
   userProjectFromDb = async() => {
@@ -147,21 +157,22 @@ class FirebaseSvc {
     return onValue(projectRef, (snapshot) => snapshot.val());
   }
 
-  matchProjectCurrentUser = async(user) => {
-    const projects = this.allProjectsFromDb();
-    let maxScore = 0;
-    let maxScoreKey = -1;
-    for (const [key, value] of Object.entries(projects)) {
-      const comparisonValue = this.compareProjectWithUser(value, user);
-      if (maxScore < comparisonValue) {
-        console.log("VALUE", comparisonValue);
-        maxScore = comparisonValue;
-        maxScoreKey = key; 
+  matchProjectCurrentUser = (user) => {
+    const success = (snapshot) => {
+      let projs = snapshot.val();
+      let maxScore = 0;
+      let maxScoreKey = -1;
+      for (const [key, value] of Object.entries(projs)) {
+        const comparisonValue = this.compareProjectWithUser(value, user);
+        // if (maxScore < comparisonValue) {
+          maxScore = comparisonValue;
+          maxScoreKey = key; 
+        // }
       }
+      this.updateUserProject(projs);
     }
-    if (maxScoreKey != -1) {
-      await this.updateUserProject(maxScoreKey);
-    }
+    
+    this.allProjectsFromDb(success);
   }
 
   // DB REFERENCES
@@ -196,6 +207,8 @@ class FirebaseSvc {
   // HELPERS
   compareProjectWithUser = (project, user) => {
     let score = 0;
+    console.log(user);
+    console.log(project);
     skillList.forEach((skill) => {
       if (skill in user && skill in project) {
         score++;
@@ -206,6 +219,7 @@ class FirebaseSvc {
         score++;
       }
     });
+    console.log("SCORE", score);
     return score;
   }
 }
