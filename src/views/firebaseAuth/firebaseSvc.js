@@ -126,6 +126,13 @@ class FirebaseSvc {
     return update(userRef, updates);
   }
 
+  updateUserProject = async(proj) => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const updates = {};
+    updates['/Users/' + auth.currentUser.uid + '/project/'] = proj;
+    return update(userRef, updates);
+  }
+
   allProjectsFromDb = async() => {
     const projectRef = this.projectRef('');
     return onValue(projectRef, (snapshot) => snapshot.val());
@@ -149,7 +156,7 @@ class FirebaseSvc {
         maxScoreKey = key; 
       }
     }
-    return maxScoreKey;
+    this.updateUserProject(maxScoreKey);
   }
 
   // DB REFERENCES
