@@ -91,6 +91,9 @@ const ProfileSection = () => {
         prevOpen.current = open;
     }, [open]);
 
+    const displayN = firebaseSvc.getUserName()
+    
+
     return (
         <>
             <Chip
@@ -161,9 +164,9 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack sx={{ mb: 2 }}>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography variant="h4">Good Morning,</Typography>
+                                                <Typography variant="h4">Good day,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Vishnu
+                                                    {displayN}!
                                                 </Typography>
                                             </Stack>
                                         </Stack>

@@ -47,10 +47,7 @@ const FirebaseRegister = ({ ...others }) => {
         e.preventDefault();
 
         if (username && email && password) {
-            if (other) {
-                skills.push(other);
-            }
-            handleRegister(username, email, password, skills, preferences);
+            handleRegister(username, email, password, skills, other, preferences);
         } else {
             // Either Name or Email or Password is missing
             setChecked(false);
@@ -58,24 +55,31 @@ const FirebaseRegister = ({ ...others }) => {
         }
     };
 
-    const handleRegister = (name, email, password, skills, prefs) => {
-        firebaseSvc.createUser({email: email, password: password}, registerSuccess, registerFailure);
-        firebaseSvc.addUserName(name, () => console.log("User Name Added"), registerFailure);
-        firebaseSvc.addUserToDb({
+    const addNameAndDetails = (name, skills, otherSkill, prefs) => () => firebaseSvc.addUserName(name, () => {
+        console.log("User Name Added");
+        let user = {
             name: name,
             email: email,
-            
-        });
+            hours: 0
+        };
+        user["otherSkill"] = otherSkill;
+        skills.forEach(skill => user[skill] = true);
+        prefs.forEach(pref => user[pref] = true);
+        firebaseSvc.addUserToDb(user, registerSuccess(user), registerFailure);
+    },
+    registerFailure);
+
+    const handleRegister = async (name, email, password, skills, otherSkill, prefs) => {
+        await firebaseSvc.createUser({email: email, password: password}, addNameAndDetails(name, skills, otherSkill, prefs), registerFailure);
     };
 
     /**
      * Callback Function if the register is successful.
      */
-    const registerSuccess = () => {
+    const registerSuccess = (user) => () => {
         console.log("Account successfully created!");
-        //TODO: Store it under User ID
-        //TODO: Match with Project
-        //TODO: Redirect to dashboard
+        firebaseSvc.matchProjectCurrentUser(user);
+        window.location.href = "/";
     };
 
     /**
@@ -206,10 +210,10 @@ const FirebaseRegister = ({ ...others }) => {
                         renderValue={(selected) => selected.join(', ')}
                         input={<OutlinedInput label="Skills"/>}
                     >
-                        {Object.keys(skillList).map((skillName) => (
+                        {skillList.map((skillName) => (
                             <MenuItem
                                 key={skillName}
-                                value={skillList[skillName]}>
+                                value={skillName}>
                                 <Checkbox checked={skills.indexOf(skillName) > -1} />
                                 <ListItemText primary={skillName} />
                             </MenuItem>
@@ -237,10 +241,10 @@ const FirebaseRegister = ({ ...others }) => {
                         renderValue={(selected) => selected.join(', ')}
                         input={<OutlinedInput label="Preferences"/>}
                     >
-                        {Object.keys(prefList).map((pref) => (
+                        {prefList.map((pref) => (
                             <MenuItem
                                 key={pref}
-                                value={prefList[pref]}>
+                                value={pref}>
                                 <Checkbox checked={preferences.indexOf(pref) > -1} />
                                 <ListItemText primary={pref} />
                             </MenuItem>

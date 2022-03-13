@@ -1,11 +1,35 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './firebaseDetails';
-import { getDatabase, ref, set } from "firebase/database";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
+import { getDatabase, ref, set, update, onValue } from "firebase/database";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from 'react';
+import { prefList, skillList } from "views/utilities/Constants";
 
 const firebase = initializeApp(firebaseConfig);
 const db = getDatabase(firebase);
 const auth = getAuth();
+
+
+
+export const useAuthListener = () => {
+  // assume user to be logged out
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  // keep track to display a spinner while auth status is being checked
+  const [checkingStatus, setCheckingStatus] = useState(true);
+
+  useEffect(() => {
+    // auth listener to keep track of user signing in and out
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user == null) {
+        setLoggedIn(false);
+      }
+      setCheckingStatus(false);
+      return () => unsubscribe()
+    });
+  }, [loggedIn, checkingStatus]);
+  return { loggedIn, checkingStatus };
+};
 
 /**
  * Class which operates as a database object, whose functions are
@@ -84,9 +108,60 @@ class FirebaseSvc {
 
   // DB OPERATIONS
 
-  addUserToDb = async(user)  => {
+  addUserToDb = async(user, success, failure)  => {
     const userRef = this.userRef(auth.currentUser.uid);
-    set(userRef, user);
+    set(userRef, user)
+    .then(success)
+    .catch(failure);
+  }
+
+  getUserFromDb = async() => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const user = await onValue(userRef, (snapshot) => snapshot.val(), {onlyOnce: true});
+    return user;
+  }
+
+  updateUserScoreToDb = async(score) => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const updates = {};
+    updates['/Users/' + auth.currentUser.uid + '/score/'] = score;
+    return update(userRef, updates);
+  }
+
+  updateUserProject = async(proj) => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const updates = {};
+    updates['/Users/' + auth.currentUser.uid + '/project/'] = proj;
+    return update(userRef, updates);
+  }
+
+  allProjectsFromDb = async() => {
+    const projectRef = this.projectRef('');
+    return onValue(projectRef, (snapshot) => snapshot.val());
+  }
+
+  userProjectFromDb = async() => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const projectId = await onValue(userRef, (snapshot) => snapshot.val().project, {onlyOnce: true});
+    const projectRef = this.projectRef(projectId);
+    return onValue(projectRef, (snapshot) => snapshot.val());
+  }
+
+  matchProjectCurrentUser = async(user) => {
+    const projects = this.allProjectsFromDb();
+    let maxScore = 0;
+    let maxScoreKey = -1;
+    for (const [key, value] of Object.entries(projects)) {
+      const comparisonValue = this.compareProjectWithUser(value, user);
+      if (maxScore < comparisonValue) {
+        console.log("VALUE", comparisonValue);
+        maxScore = comparisonValue;
+        maxScoreKey = key; 
+      }
+    }
+    if (maxScoreKey != -1) {
+      await this.updateUserProject(maxScoreKey);
+    }
   }
 
   // DB REFERENCES
@@ -99,7 +174,26 @@ class FirebaseSvc {
    userRef(params) {
     return ref(db, `Users/${params}`);
   }
+
+  getUserName() {
+    const user = auth.currentUser
+    if (user) {
+      return user.displayName
+    } else {
+      return ''
+    }
+  }
   
+  getHours = async () => {
+    const user = auth.currentUser
+    if (user) {
+      const userRef = this.userRef(`${user.uid}/hours`)
+      const hours = await onValue(userRef, (snapshot) => snapshot.val())
+      return hours
+    }
+    return false
+  }
+
   /**
    * Get the reference to certificate object within the certificates object within the database
    * @param {*} params id of object
@@ -110,14 +204,37 @@ class FirebaseSvc {
   }
 
   getAllCertificatesFromDb() {
-    return this.certificateRef();
+    return onValue(this.certificateRef());
   }
 
   certsRefOff() {
     return this.certificateRef().off()
   }
 
+  /**
+   * Get the reference to project object within the projects object within the database
+   * @param {*} params id of object
+   * @returns reference
+   */
+   projectRef(params) {
+    return ref(db, `Projects/${params}`);
+  }
 
+  // HELPERS
+  compareProjectWithUser = (project, user) => {
+    let score = 0;
+    skillList.forEach((skill) => {
+      if (skill in user && skill in project) {
+        score++;
+      }
+    });
+    prefList.forEach((pref) => {
+      if (pref in user && pref in project) {
+        score++;
+      }
+    });
+    return score;
+  }
 }
 
 // To apply the default browser preference instead of explicitly setting it.

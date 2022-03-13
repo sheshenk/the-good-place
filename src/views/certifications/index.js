@@ -4,14 +4,14 @@ import React, {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Button, CardActionArea, CardActions } from '@mui/material';
+import { Button, CardActionArea, CardActions, Grid } from '@mui/material';
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 
-const Certificate = () => (
+const Certificate = ({props}) => (
 
     <Card sx={{ maxWidth: 345, maxHeight: 400 }}>
       <CardActionArea>
@@ -26,13 +26,13 @@ const Certificate = () => (
             Name
           </Typography>
           <Typography variant="body2" color="text.primary">
-            Project:
+            Project: {props.project}
           </Typography>
           <Typography variant="body2" color="text.primary">
-            Hours Contributed: 
+            Hours Contributed: {props.hours}
           </Typography>
           <Typography variant="body2" color="text.primary">
-            Level of Achievement: 
+            Level of Achievement: {props.level}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -55,9 +55,17 @@ const Certifications = () => {
         return () => firebaseSvc.certsRefOff();
     }, []);
 
-    <Certificate>
-    </Certificate>
-    
+    return (
+      <Grid container>
+        {
+          certificates.map(cert => (
+            <Certificate props={cert}>
+            </Certificate>
+          ))
+        }
+      </Grid>
+
+    );
 };
 
 export default Certifications;
