@@ -58,6 +58,18 @@ class FirebaseSvc {
   }
   
   /**
+   * 
+   */
+  isUserSignedIn = async() => {
+    const user = auth.currentUser;
+    if (user) {// user is not a boolean so we can't just return user
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  /**
    * For Adding DisplayName of the User in Auth Table
    * @param {*} user 
    * @param {*} success 
