@@ -158,20 +158,19 @@ class FirebaseSvc {
   }
 
   matchProjectCurrentUser = (user) => {
-    const success = (snapshot) => {
+    const success = async (snapshot) => {
       let projs = snapshot.val();
       let maxScore = 0;
       let maxScoreKey = -1;
       for (const [key, value] of Object.entries(projs)) {
-        const comparisonValue = this.compareProjectWithUser(value, user);
-        // if (maxScore < comparisonValue) {
+        const comparisonValue = await this.compareProjectWithUser(value, user);
+        if (maxScore < comparisonValue) {
           maxScore = comparisonValue;
-          maxScoreKey = key; 
-        // }
+          maxScoreKey = key;
+        }
       }
-      this.updateUserProject(projs);
+      this.updateUserProject(maxScoreKey);
     }
-    
     this.allProjectsFromDb(success);
   }
 
@@ -233,21 +232,21 @@ class FirebaseSvc {
   }
 
   // HELPERS
-  compareProjectWithUser = (project, user) => {
+  compareProjectWithUser = async (project, user) => {
     let score = 0;
-    console.log(user);
-    console.log(project);
-    skillList.forEach((skill) => {
-      if (skill in user && skill in project) {
-        score++;
-      }
-    });
-    prefList.forEach((pref) => {
-      if (pref in user && pref in project) {
-        score++;
-      }
-    });
-    console.log("SCORE", score);
+    score = await user.then((userVal) => {
+      skillList.forEach((skill) => {
+        if (skill in userVal && skill in project) {
+          score++;
+        }
+      });
+      prefList.forEach((pref) => {
+        if (pref in userVal && pref in project) {
+          score++;
+        }
+      });
+      return score;
+    }).catch(console.error);
     return score;
   }
 }

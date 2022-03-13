@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // material-ui
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
@@ -11,7 +11,7 @@ import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
-import { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
+import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
 import { Navigate } from 'react-router';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
@@ -32,6 +32,12 @@ const Dashboard = () => {
                 <Grid container spacing={gridSpacing}>
                     <Grid item lg={12} md={12} sm={6} xs={12}>
                         <EarningCard isLoading={isLoading} />
+                        <Button onClick={() => {                            
+                            const user = firebaseSvc.currentUser();
+                            firebaseSvc.matchProjectCurrentUser(user);
+                        }}>
+                        CLICK ME
+                        </Button>
                     </Grid>
                     {/* <Grid item lg={6} md={6} sm={6} xs={12}>
                         <TotalOrderLineChartCard isLoading={isLoading} />
