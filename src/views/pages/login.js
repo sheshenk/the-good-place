@@ -5,11 +5,11 @@ import { useTheme } from '@mui/material/styles';
 import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 
 // project imports
-import AuthWrapper1 from '../AuthWrapper1';
-import AuthCardWrapper from '../AuthCardWrapper';
-import AuthLogin from '../auth-forms/AuthLogin';
+import AuthWrapper1 from './authentication/AuthWrapper1';
+import AuthCardWrapper from './authentication/AuthCardWrapper';
 import Logo from 'ui-component/Logo';
 import AuthFooter from 'ui-component/cards/AuthFooter';
+import FirebaseLogin from './authentication/FirebaseLogin';
 
 // assets
 
@@ -60,7 +60,7 @@ const Login = () => {
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <AuthLogin />
+                                        <FirebaseLogin />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Divider />

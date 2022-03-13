@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-// import { initializeApp } from "firebase/app";
+
 // import { getAnalytics } from "firebase/analytics";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -17,14 +17,3 @@ export const firebaseConfig = {
   appId: "1:555599011494:web:2caca28def0df1cbe4de67",
   measurementId: "G-EH9RPVKK1X"
 };
-
-const config = {
-    // basename: only at build time to set, and Don't add '/' at end off BASENAME for breadcrumbs, also Don't put only '/' use blank('') instead,
-    // like '/berry-material-react/react/default'
-    basename: '',
-    defaultPath: '/dashboard/default',
-    fontFamily: `'Roboto', sans-serif`,
-    borderRadius: 12
-};
-
-export default config;
