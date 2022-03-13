@@ -150,6 +150,11 @@ class FirebaseSvc {
     return onValue(projectRef, callback);
   }
 
+  allStoriesFromDb = async(callback) => {
+    const storiesRef = this.storiesRef('');
+    return onValue(storiesRef, callback);
+  }
+
   userProjectFromDb = async() => {
     const userRef = this.userRef(auth.currentUser.uid);
     const projectId = await onValue(userRef, (snapshot) => snapshot.val().project, {onlyOnce: true});
@@ -219,6 +224,10 @@ class FirebaseSvc {
    */
    projectRef(params) {
     return ref(db, `Projects/${params}`);
+  }
+
+  storiesRef(params) {
+    return ref(db, `Stories/${params}`);
   }
 
   // HELPERS
