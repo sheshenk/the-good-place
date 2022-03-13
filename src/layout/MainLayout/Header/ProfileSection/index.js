@@ -91,6 +91,7 @@ const ProfileSection = () => {
         prevOpen.current = open;
     }, [open]);
 
+
     return (
         <>
             <Chip
@@ -161,9 +162,9 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack sx={{ mb: 2 }}>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography variant="h4">Good Morning,</Typography>
+                                                <Typography variant="h4">Who are you,</Typography>
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Vishnu
+                                                    
                                                 </Typography>
                                             </Stack>
                                         </Stack>

@@ -24,7 +24,7 @@ const ProjectCard = (props) => {
                     component="img"
                     height="194"
                     image={props.img}
-                    alt="Paella dish"
+                    alt=""
                 />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">
@@ -32,7 +32,7 @@ const ProjectCard = (props) => {
                     </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
+                    <IconButton aria-label="add project">
                         <StarBorder />
                     </IconButton>
                     <IconButton aria-label="share">

@@ -19,11 +19,12 @@ export const useAuthListener = () => {
 
   useEffect(() => {
     // auth listener to keep track of user signing in and out
-    auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user == null) {
         setLoggedIn(false);
       }
       setCheckingStatus(false);
+      return () => unsubscribe()
     });
   }, [loggedIn, checkingStatus]);
   return { loggedIn, checkingStatus };
