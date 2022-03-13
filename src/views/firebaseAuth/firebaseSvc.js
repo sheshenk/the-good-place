@@ -82,7 +82,8 @@ class FirebaseSvc {
     .catch(failure);// If adding the name doesn't work
   }
 
-  // DB Operations
+  // DB OPERATIONS
+
   addUserToDb = async(user)  => {
     const userRef = this.userRef(auth.currentUser.uid);
     set(userRef, user);
@@ -98,8 +99,15 @@ class FirebaseSvc {
    userRef(params) {
     return ref(db, `Users/${params}`);
   }
-
   
+  /**
+   * Get the reference to certificate object within the certificates object within the database
+   * @param {*} params id of object
+   * @returns reference
+   */
+   certificateRef(params) {
+    return ref(db, `Certificates/${params}`);
+  }
 }
 
 // To apply the default browser preference instead of explicitly setting it.
