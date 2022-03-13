@@ -108,6 +108,16 @@ class FirebaseSvc {
    certificateRef(params) {
     return ref(db, `Certificates/${params}`);
   }
+
+  getAllCertificatesFromDb() {
+    return this.certificateRef();
+  }
+
+  certsRefOff() {
+    return this.certificateRef().off()
+  }
+
+
 }
 
 // To apply the default browser preference instead of explicitly setting it.

@@ -1,18 +1,18 @@
 // material-ui
-import { Typography } from '@mui/material';
-import * as React from 'react';
+import { Container, Typography } from '@mui/material';
+import React, {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { Button, CardActionArea, CardActions } from '@mui/material';
+import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
-
-// project imports
-import MainCard from 'ui-component/cards/MainCard';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const Certificate = ({props}) => (
+
+const Certificate = () => (
+
     <Card sx={{ maxWidth: 345, maxHeight: 400 }}>
       <CardActionArea>
         <CardMedia
@@ -26,13 +26,13 @@ const Certificate = ({props}) => (
             Name
           </Typography>
           <Typography variant="body2" color="text.primary">
-            Project: 
+            Project:
           </Typography>
           <Typography variant="body2" color="text.primary">
-            Hours Contributed:
+            Hours Contributed: 
           </Typography>
           <Typography variant="body2" color="text.primary">
-            Level of Achievement:
+            Level of Achievement: 
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -46,21 +46,18 @@ const Certificate = ({props}) => (
 
 );
 
-const Certifications = () => (
+const Certifications = () => {
+    const [certificates, setCertificates] = useState([]);
+
+    useEffect(() => {
+        const certificates = firebaseSvc.getAllCertificatesFromDb();
+        setCertificates(certificates);
+        return () => firebaseSvc.certsRefOff();
+    }, []);
+
     <Certificate>
     </Certificate>
-);
-
-
-// const Certifications = () => (
-//     <MainCard title="Sample Card">
-//         <Typography variant="body2">
-//             Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif
-//             ad minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in
-//             reprehended in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa
-//             qui officiate descent molls anim id est labours.
-//         </Typography>
-//     </MainCard>
-// );
+    
+};
 
 export default Certifications;
