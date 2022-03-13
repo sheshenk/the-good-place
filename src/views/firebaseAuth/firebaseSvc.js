@@ -162,7 +162,26 @@ class FirebaseSvc {
    userRef(params) {
     return ref(db, `Users/${params}`);
   }
+
+  getUserName() {
+    const user = auth.currentUser
+    if (user) {
+      return user.displayName
+    } else {
+      return ''
+    }
+  }
   
+  getHours = async () => {
+    const user = auth.currentUser
+    if (user) {
+      const userRef = this.userRef(`${user.uid}/hours`)
+      const hours = await onValue(userRef, (snapshot) => snapshot.val())
+      return hours
+    }
+    return false
+  }
+
   /**
    * Get the reference to certificate object within the certificates object within the database
    * @param {*} params id of object

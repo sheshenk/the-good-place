@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -17,6 +17,7 @@ import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
 import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.dark,
@@ -144,7 +145,7 @@ const EarningCard = ({ isLoading }) => {
                                 <Grid container alignItems="center">
                                     <Grid item>
                                         <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                            22,500
+                                            22
                                         </Typography>
                                     </Grid>
                                     <Grid item>
@@ -169,7 +170,7 @@ const EarningCard = ({ isLoading }) => {
                                         color: theme.palette.secondary[200]
                                     }}
                                 >
-                                    Total Points Earned
+                                    Total Hours Worked
                                 </Typography>
                             </Grid>
                         </Grid>
