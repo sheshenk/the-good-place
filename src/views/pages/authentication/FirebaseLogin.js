@@ -6,68 +6,89 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    Checkbox,
     Divider,
-    FormControl,
-    FormControlLabel,
-    FormHelperText,
     Grid,
-    IconButton,
-    InputAdornment,
-    InputLabel,
-    OutlinedInput,
-    Stack,
     TextField,
     Typography,
     useMediaQuery
 } from '@mui/material';
 
-// third party
-import * as Yup from 'yup';
-import { Formik, setIn } from 'formik';
-
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-import Google from 'assets/images/icons/social-google.svg';
-import { mailRegex } from 'views/utilities/Constants';
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
-
+//TODO: Separate Email Text Field from Password Text Field
+//TODO: Center the Sign In Button below Text Fields
+//TODO: Redirect to dashboard inside loginSuccess handler
 const FirebaseLogin = ({ ...others }) => {
-    const theme = useTheme();
-    const scriptedRef = useScriptRef();
-    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-    const customization = useSelector((state) => state.customization);
     const [checked, setChecked] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [invalidEmail, setInvalidEmail] = useState(false);
-    const [emailError, setEmailError] = useState("");
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const validateEmail = () => {
-        setInvalidEmail(!(mailRegex.test(email)));
-        setEmailError("Invalid Email Address");
-    };
+    // const validateEmail = () => {
+    //     setInvalidEmail(!(mailRegex.test(email)));
+    //     setEmailError("Invalid Email Address");
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         if (email && password) {
             handleLogin(email, password);
+        } else {
+            // Either Email or Password is missing
+            setChecked(false);
+            setErrorMsg("Both fields are required!");
         }
     };
 
     const handleLogin = (email, password) => firebaseSvc.login({email: email, password: password}, loginSuccess, loginFailure);
 
-    const loginSuccess = (user) => {console.log(user)};
-    const loginFailure = (err) => {console.error(err)};
+    /**
+     * Callback Function if the login is successful.
+     * 
+     * @param {*} user The User Credential Object. Structure is 
+     * {
+     *      user: User Details Object
+     * }
+     */
+    const loginSuccess = (userCredential) => {
+        setChecked(true);
+        const user = userCredential.user;
+        // Access user.displayName, user.email, user.photoURL, user.phoneNumber, user.emailVerified
+        console.log(`${user.name} has logged in!`);
+        //TODO: Re-direct to Dashboard from here
+    };
+
+    /**
+     * Callback function if the login is unsuccessful.
+     * 
+     * @param {*} err The Error Object with structure
+     * {
+     *      code: Error Code,
+     *      message: Error Description
+     * }
+     */
+    const loginFailure = (err) => {
+        const code = err.code;
+        let message = '';
+        switch(code) {
+            case "auth/invalid-email": message = "Invalid Email!";
+            break;
+            case "auth/wrong-password": message = "Wrong Password!";
+            break;
+            case "auth/user-not-found": message = "No such user exists";
+            break;
+            default: message = "Login unsuccessful, try again";
+            break;
+        }
+        
+        setErrorMsg(message);
+        setChecked(false);
+        console.error(err.code, err.message);
+    };
 
     return (
         <>
@@ -88,9 +109,17 @@ const FirebaseLogin = ({ ...others }) => {
                         <Typography variant="subtitle1">Sign in with Email address</Typography>
                     </Box>
                 </Grid>
+                {!checked && 
+                    <Typography variant="subtitle2">
+                        {
+                            errorMsg
+                        }
+                    </Typography>
+                }
                 <form noValidate autoComplete="off" onSubmit={handleSubmit}>
                     <TextField
                     id="login-email"
+                    label="Email Address"
                     variant="filled"
                     type="email"
                     onChange={(event) => setEmail(event.target.value)}
@@ -111,7 +140,6 @@ const FirebaseLogin = ({ ...others }) => {
                     }}
                     variant = 'outlined'
                     type = 'submit'
-                    onClick={handleSubmit}
                     >
                         Sign In
                     </Button>

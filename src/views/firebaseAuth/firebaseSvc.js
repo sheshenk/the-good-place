@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './firebaseDetails';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const firebase = initializeApp(firebaseConfig);
 
@@ -50,14 +50,21 @@ class FirebaseSvc {
    * @param {*} success 
    * @param {*} failure 
    */
-  createUser = (user, success, failure) => {
-    firebase
-    .auth()
-    .createUserWithEmailAndPassword(user.email, user.password)
-    .then(success)
-    .catch(failure);//if create user with email and pw fails    
+  createUser = async(user, success, failure) => {
+    await createUserWithEmailAndPassword(auth, user.email, user.password)
+    .then(async () => await updateProfile(auth.currentUser,
+                      {
+                        displayName: user.name
+                      })
+                      .then(success)
+                      .catch(failure)// If adding the name doesn't work
+    )
+    .catch(failure);// If create user with email and pw fails    
+
+    
   }
 }
+
 // To apply the default browser preference instead of explicitly setting it.
 // firebase.auth().useDeviceLanguage();
 // firebase.auth().languageCode = 'de';
