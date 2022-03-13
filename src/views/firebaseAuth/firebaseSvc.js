@@ -38,9 +38,7 @@ class FirebaseSvc {
    * @param {*} failure Print error if failure occurs
    */
   signOut = (success, failure) => {
-    firebase
-    .auth()
-    .signOut()
+    signOut(auth)
     .then(success)
     .catch(failure);
   };
