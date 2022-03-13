@@ -1,23 +1,24 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './firebaseDetails';
+import { getDatabase, ref, push, set } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const firebase = initializeApp(firebaseConfig);
-
+const db = getDatabase(firebase);
 const auth = getAuth();
-console.log(auth);
 
 /**
  * Class which operates as a database object, whose functions are
  * called for any and all CRUD operations. Backend logic is present
  * here as well, through the matching functions.
- * TODO: Migrate these operations to a separate backend repository
  */
 
 class FirebaseSvc {
   constructor() {
     
   }
+
+  // AUTHENTICATION
 
   /**
    * Login to user account
@@ -41,7 +42,7 @@ class FirebaseSvc {
     .auth()
     .signOut()
     .then(success)
-    .catch(failure)
+    .catch(failure);
   };
 
   /**
@@ -52,17 +53,55 @@ class FirebaseSvc {
    */
   createUser = async(user, success, failure) => {
     await createUserWithEmailAndPassword(auth, user.email, user.password)
-    .then(async () => await updateProfile(auth.currentUser,
-                      {
-                        displayName: user.name
-                      })
-                      .then(success)
-                      .catch(failure)// If adding the name doesn't work
-    )
-    .catch(failure);// If create user with email and pw fails    
-
-    
+    .then(success)
+    .catch(failure);// If create user with email and pw fails
   }
+  
+  /**
+   * 
+   */
+  isUserSignedIn = async() => {
+    const user = auth.currentUser;
+    if (user) {// user is not a boolean so we can't just return user
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  /**
+   * For Adding DisplayName of the User in Auth Table
+   * @param {*} user 
+   * @param {*} success 
+   * @param {*} failure 
+   */
+  addUserName = async(name, success, failure) => {
+    await updateProfile(auth.currentUser,
+    {
+      displayName: name
+    })
+    .then(success)
+    .catch(failure);// If adding the name doesn't work
+  }
+
+  // DB Operations
+  addUserToDb = async(user)  => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    set(userRef, user);
+  }
+
+  // DB REFERENCES
+
+  /**
+   * Get the reference to user object within the users object within the database
+   * @param {*} params id of object
+   * @returns reference
+   */
+   userRef(params) {
+    return ref(db, `Users/${params}`);
+  }
+
+  
 }
 
 // To apply the default browser preference instead of explicitly setting it.
