@@ -32,12 +32,6 @@ const Dashboard = () => {
                 <Grid container spacing={gridSpacing}>
                     <Grid item lg={12} md={12} sm={6} xs={12}>
                         <EarningCard isLoading={isLoading} />
-                        <Button onClick={() => {                            
-                            const user = firebaseSvc.currentUser();
-                            firebaseSvc.matchProjectCurrentUser(user);
-                        }}>
-                        CLICK ME
-                        </Button>
                     </Grid>
                     {/* <Grid item lg={6} md={6} sm={6} xs={12}>
                         <TotalOrderLineChartCard isLoading={isLoading} />

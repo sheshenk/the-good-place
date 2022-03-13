@@ -163,6 +163,7 @@ class FirebaseSvc {
       let maxScore = 0;
       let maxScoreKey = -1;
       for (const [key, value] of Object.entries(projs)) {
+        console.log(user);
         const comparisonValue = await this.compareProjectWithUser(value, user);
         if (maxScore < comparisonValue) {
           maxScore = comparisonValue;
