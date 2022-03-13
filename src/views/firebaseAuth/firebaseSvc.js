@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './firebaseDetails';
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, update, onValue } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from 'react';
 
@@ -112,6 +112,34 @@ class FirebaseSvc {
     set(userRef, user);
   }
 
+  updateUserScoreToDb = async(score) => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const updates = {};
+    updates['/Users/' + auth.currentUser.uid + '/score/'] = score;
+    return update(userRef, updates);
+  }
+
+  allProjectsFromDb = async() => {
+    const projectRef = this.projectRef('');
+    return onValue(projectRef, (snapshot) => snapshot.val());
+  }
+
+  userProjectFromDb = async() => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const projectId = await onValue(userRef, (snapshot) => snapshot.val().project, {onlyOnce: true});
+    const projectRef = this.projectRef(projectId);
+    return onValue(projectRef, (snapshot) => snapshot.val());
+  }
+
+  matchProjectCurrentUser = async() => {
+    const projects = this.allProjectsFromDb();
+    let maxScore = 0;
+    let maxScoreIndex = -1;
+    for (const [key, value] of Object.entries(projects)) {
+      
+    }
+  }
+
   // DB REFERENCES
 
   /**
@@ -130,6 +158,15 @@ class FirebaseSvc {
    */
    certificateRef(params) {
     return ref(db, `Certificates/${params}`);
+  }
+
+  /**
+   * Get the reference to project object within the projects object within the database
+   * @param {*} params id of object
+   * @returns reference
+   */
+   projectRef(params) {
+    return ref(db, `Projects/${params}`);
   }
 }
 

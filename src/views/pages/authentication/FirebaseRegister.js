@@ -61,6 +61,7 @@ const FirebaseRegister = ({ ...others }) => {
             let user = {
                 name: name,
                 email: email,
+                hours: 0
             };
             user["otherSkill"] = otherSkill;
             skills.forEach(skill => user[skill] = true);
@@ -78,6 +79,7 @@ const FirebaseRegister = ({ ...others }) => {
      */
     const registerSuccess = () => {
         console.log("Account successfully created!");
+        firebaseSvc.matchProjectCurrentUser();
         window.location.href = "/";
         //TODO: Match with Project
         //TODO: Redirect to dashboard
