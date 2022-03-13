@@ -55,6 +55,7 @@ const FirebaseLogin = ({ ...others }) => {
         // Access user.displayName, user.email, user.photoURL, user.phoneNumber, user.emailVerified
         console.log(`${user.name} has logged in!`);
         //TODO: Re-direct to Dashboard from here
+        window.location.href = '/'
     };
 
     /**

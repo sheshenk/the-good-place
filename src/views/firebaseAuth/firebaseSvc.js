@@ -1,11 +1,33 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './firebaseDetails';
 import { getDatabase, ref, set } from "firebase/database";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState } from 'react';
 
 const firebase = initializeApp(firebaseConfig);
 const db = getDatabase(firebase);
 const auth = getAuth();
+
+
+
+export const useAuthListener = () => {
+  // assume user to be logged out
+  const [loggedIn, setLoggedIn] = useState(true);
+
+  // keep track to display a spinner while auth status is being checked
+  const [checkingStatus, setCheckingStatus] = useState(true);
+
+  useEffect(() => {
+    // auth listener to keep track of user signing in and out
+    auth.onAuthStateChanged((user) => {
+      if (user == null) {
+        setLoggedIn(false);
+      }
+      setCheckingStatus(false);
+    });
+  }, [loggedIn, checkingStatus]);
+  return { loggedIn, checkingStatus };
+};
 
 /**
  * Class which operates as a database object, whose functions are

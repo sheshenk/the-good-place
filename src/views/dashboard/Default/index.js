@@ -11,6 +11,8 @@ import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
+import { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
+import { Navigate } from 'react-router';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -19,6 +21,10 @@ const Dashboard = () => {
     useEffect(() => {
         setLoading(false);
     }, []);
+
+    const { loggedIn, checkingStatus } = useAuthListener();
+
+    if (!loggedIn) return <Navigate to='/pages/login/login3'/>
 
     return (
         <Grid container spacing={gridSpacing}>
