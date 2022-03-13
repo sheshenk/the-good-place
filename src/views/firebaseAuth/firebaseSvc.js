@@ -195,12 +195,11 @@ class FirebaseSvc {
     }
   }
   
-  getHours = async () => {
+  getHours = async (callback) => {
     const user = auth.currentUser
     if (user) {
       const userRef = this.userRef(`${user.uid}/hours`)
-      const hours = await onValue(userRef, (snapshot) => snapshot.val())
-      return hours
+      return onValue(userRef, callback)
     }
     return false
   }
