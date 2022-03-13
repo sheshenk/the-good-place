@@ -203,8 +203,9 @@ class FirebaseSvc {
     return ref(db, `Certificates/${params}`);
   }
 
-  getAllCertificatesFromDb() {
-    return onValue(this.certificateRef());
+  getAllCertificatesFromDb = async(callback) => {
+    const certRef = this.certificateRef('');
+    return onValue(certRef, callback)
   }
 
   certsRefOff() {

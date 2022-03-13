@@ -10,7 +10,6 @@ import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-
 const Certificate = ({props}) => (
 
     <Card sx={{ maxWidth: 345, maxHeight: 400 }}>
@@ -50,9 +49,10 @@ const Certifications = () => {
     const [certificates, setCertificates] = useState([]);
 
     useEffect(() => {
-        const certificates = firebaseSvc.getAllCertificatesFromDb();
-        setCertificates(certificates);
-        return () => firebaseSvc.certsRefOff();
+      const certificates = firebaseSvc.getAllCertificatesFromDb();
+      setCertificates(certificates);
+      return () => firebaseSvc.certsRefOff();
+      
     }, []);
 
     return (
@@ -67,5 +67,4 @@ const Certifications = () => {
 
     );
 };
-
 export default Certifications;
