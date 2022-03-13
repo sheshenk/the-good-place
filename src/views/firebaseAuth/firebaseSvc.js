@@ -108,9 +108,11 @@ class FirebaseSvc {
 
   // DB OPERATIONS
 
-  addUserToDb = async(user)  => {
+  addUserToDb = async(user, success, failure)  => {
     const userRef = this.userRef(auth.currentUser.uid);
-    set(userRef, user);
+    set(userRef, user)
+    .then(success)
+    .catch(failure);
   }
 
   getUserFromDb = async() => {
@@ -123,6 +125,13 @@ class FirebaseSvc {
     const userRef = this.userRef(auth.currentUser.uid);
     const updates = {};
     updates['/Users/' + auth.currentUser.uid + '/score/'] = score;
+    return update(userRef, updates);
+  }
+
+  updateUserProject = async(proj) => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const updates = {};
+    updates['/Users/' + auth.currentUser.uid + '/project/'] = proj;
     return update(userRef, updates);
   }
 
@@ -145,11 +154,14 @@ class FirebaseSvc {
     for (const [key, value] of Object.entries(projects)) {
       const comparisonValue = this.compareProjectWithUser(value, user);
       if (maxScore < comparisonValue) {
+        console.log("VALUE", comparisonValue);
         maxScore = comparisonValue;
         maxScoreKey = key; 
       }
     }
-    return maxScoreKey;
+    if (maxScoreKey != -1) {
+      await this.updateUserProject(maxScoreKey);
+    }
   }
 
   // DB REFERENCES
