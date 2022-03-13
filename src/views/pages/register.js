@@ -53,7 +53,14 @@ const Register = () => {
                                                         fontSize="16px"
                                                         textAlign={matchDownSM ? 'center' : 'inherit'}
                                                     >
-                                                        Enter your credentials to continue
+                                                        Fill in your details!
+                                                    </Typography>
+                                                    <Typography
+                                                        variant="caption"
+                                                        fontSize="16px"
+                                                        textAlign={matchDownSM ? 'center' : 'inherit'}
+                                                    >
+                                                         (We'll only to use them to match with projects)
                                                     </Typography>
                                                 </Stack>
                                             </Grid>

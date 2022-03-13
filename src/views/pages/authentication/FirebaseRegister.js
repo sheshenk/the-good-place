@@ -4,8 +4,14 @@ import { useState, useEffect } from 'react';
 import {
     Box,
     Button,
+    Checkbox,
     Divider,
+    FormControl,
     Grid,
+    ListItemText,
+    MenuItem,
+    OutlinedInput,
+    Select,
     TextField,
     Typography
 } from '@mui/material';
@@ -15,6 +21,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
 // assets
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
+import { skillList, prefList } from 'views/utilities/Constants';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
@@ -26,6 +33,9 @@ const FirebaseRegister = ({ ...others }) => {
     const [password, setPassword] = useState('');
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
+    const [skills, setSkills] = useState([]);// List of all chosen skills
+    const [other, setOther] = useState('');// Other Skills they possess
+    const [preferences, setPrefs] = useState([]);//Project Preference
 
     const changePassword = (value) => {
         const temp = strengthIndicator(value);
@@ -37,7 +47,10 @@ const FirebaseRegister = ({ ...others }) => {
         e.preventDefault();
 
         if (username && email && password) {
-            handleRegister(username, email, password);
+            if (other) {
+                skills.push(other);
+            }
+            handleRegister(username, email, password, skills, preferences);
         } else {
             // Either Name or Email or Password is missing
             setChecked(false);
@@ -45,7 +58,15 @@ const FirebaseRegister = ({ ...others }) => {
         }
     };
 
-    const handleRegister = (name, email, password) => firebaseSvc.createUser({name: name, email: email, password: password}, registerSuccess, registerFailure);
+    const handleRegister = (name, email, password, skills, prefs) => {
+        firebaseSvc.createUser({email: email, password: password}, registerSuccess, registerFailure);
+        firebaseSvc.addUserName(name, () => console.log("User Name Added"), registerFailure);
+        firebaseSvc.addUserToDb({
+            name: name,
+            email: email,
+            
+        });
+    };
 
     /**
      * Callback Function if the register is successful.
@@ -82,6 +103,26 @@ const FirebaseRegister = ({ ...others }) => {
         setChecked(false);
         console.error(err.code, err.message);
     };
+
+    const handleSkillsChange = (event) => {
+        const {
+          target: { value },
+        } = event;
+        setSkills(
+          // On autofill we get a stringified value.
+          typeof value === 'string' ? value.split(',') : value,
+        );
+      };
+
+      const handlePrefsChange = (event) => {
+        const {
+          target: { value },
+        } = event;
+        setPrefs(
+          // On autofill we get a stringified value.
+          typeof value === 'string' ? value.split(',') : value,
+        );
+      };
 
     useEffect(() => {
         changePassword('123456');
@@ -127,8 +168,84 @@ const FirebaseRegister = ({ ...others }) => {
                     label="Password"
                     type="password"
                     variant="filled"
-                    onChange={(event) => setPassword(event.target.value)}
+                    onChange={(event) => {
+                        changePassword(event.target.value);
+                        setPassword(event.target.value);
+                        }}
                     />
+                    {/* Password Strength Checker */}
+                    {strength !== 0 && (
+                                <FormControl fullWidth>
+                                    <Box sx={{ mb: 2 }}>
+                                        <Grid container spacing={2} alignItems="center">
+                                            <Grid item>
+                                                <Box
+                                                    style={{ backgroundColor: level?.color }}
+                                                    sx={{ width: 85, height: 8, borderRadius: '7px' }}
+                                                />
+                                            </Grid>
+                                            <Grid item>
+                                                <Typography variant="subtitle1" fontSize="0.75rem">
+                                                    {level?.label}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                </FormControl>
+                    )}
+                    <Grid item xs={12} container alignItems="center" justifyContent="center">
+                        <Box sx={{ mb: 2, mt: 2 }}>
+                            <Typography variant="subtitle1">Share what you're great at!</Typography>
+                        </Box>
+                    </Grid>
+                    <Select
+                        id="register-skills"
+                        multiple
+                        value={skills}
+                        onChange={handleSkillsChange}
+                        renderValue={(selected) => selected.join(', ')}
+                        input={<OutlinedInput label="Skills"/>}
+                    >
+                        {Object.keys(skillList).map((skillName) => (
+                            <MenuItem
+                                key={skillName}
+                                value={skillList[skillName]}>
+                                <Checkbox checked={skills.indexOf(skillName) > -1} />
+                                <ListItemText primary={skillName} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    <TextField
+                        id='register-otherskills'
+                        label="Other Skills to Share"
+                        type='text'
+                        variant='filled'
+                        onChange={(event) => {
+                            setOther(event.target.value);
+                        }}
+                    />
+                    <Grid item xs={12} container alignItems="center" justifyContent="center">
+                        <Box sx={{ mb: 2, mt: 2 }}>
+                            <Typography variant="subtitle1">Project Working Preferences</Typography>
+                        </Box>
+                    </Grid>
+                    <Select
+                        id="register-preference"
+                        multiple
+                        value={preferences}
+                        onChange={handlePrefsChange}
+                        renderValue={(selected) => selected.join(', ')}
+                        input={<OutlinedInput label="Preferences"/>}
+                    >
+                        {Object.keys(prefList).map((pref) => (
+                            <MenuItem
+                                key={pref}
+                                value={prefList[pref]}>
+                                <Checkbox checked={preferences.indexOf(pref) > -1} />
+                                <ListItemText primary={pref} />
+                            </MenuItem>
+                        ))}
+                    </Select>
                     <Button
                     color='inherit'
                     size = 'large'

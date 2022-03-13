@@ -1,20 +1,15 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 
-// material-ui
-import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
     Divider,
     Grid,
     TextField,
-    Typography,
-    useMediaQuery
+    Typography
 } from '@mui/material';
 
 // project imports
-import useScriptRef from 'hooks/useScriptRef';
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
