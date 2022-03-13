@@ -8,25 +8,26 @@ const icons = { IconBrandChrome, IconHelp };
 
 const other = {
     id: 'sample-docs-roadmap',
+    title: 'Certifications',
     type: 'group',
     children: [
         {
-            id: 'sample-page',
-            title: 'Sample Page',
+            id: 'certifications',
+            title: 'Certifications',
             type: 'item',
-            url: '/sample-page',
+            url: '/certifications',
             icon: icons.IconBrandChrome,
             breadcrumbs: false
         },
-        {
-            id: 'documentation',
-            title: 'Documentation',
-            type: 'item',
-            url: 'https://codedthemes.gitbook.io/berry/',
-            icon: icons.IconHelp,
-            external: true,
-            target: true
-        }
+        // {
+        //     id: 'documentation',
+        //     title: 'Documentation',
+        //     type: 'item',
+        //     url: 'https://codedthemes.gitbook.io/berry/',
+        //     icon: icons.IconHelp,
+        //     external: true,
+        //     target: true
+        // }
     ]
 };
 

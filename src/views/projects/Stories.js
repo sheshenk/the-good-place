@@ -56,7 +56,7 @@ ColorBox.propTypes = {
 
 // ===============================|| UI COLOR ||=============================== //
 
-const UIColor = () => (
+const Stories = () => (
     <MainCard title="Color Palette" secondary={<SecondaryAction link="https://next.material-ui.com/system/palette/" />}>
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
@@ -224,4 +224,4 @@ const UIColor = () => (
     </MainCard>
 );
 
-export default UIColor;
+export default Stories;
