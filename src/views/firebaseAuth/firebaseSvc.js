@@ -3,6 +3,7 @@ import { firebaseConfig } from './firebaseDetails';
 import { getDatabase, ref, set, update, onValue } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from 'react';
+import { prefList, skillList } from "views/utilities/Constants";
 
 const firebase = initializeApp(firebaseConfig);
 const db = getDatabase(firebase);
@@ -112,6 +113,12 @@ class FirebaseSvc {
     set(userRef, user);
   }
 
+  getUserFromDb = async() => {
+    const userRef = this.userRef(auth.currentUser.uid);
+    const user = await onValue(userRef, (snapshot) => snapshot.val(), {onlyOnce: true});
+    return user;
+  }
+
   updateUserScoreToDb = async(score) => {
     const userRef = this.userRef(auth.currentUser.uid);
     const updates = {};
@@ -131,13 +138,18 @@ class FirebaseSvc {
     return onValue(projectRef, (snapshot) => snapshot.val());
   }
 
-  matchProjectCurrentUser = async() => {
+  matchProjectCurrentUser = async(user) => {
     const projects = this.allProjectsFromDb();
     let maxScore = 0;
-    let maxScoreIndex = -1;
+    let maxScoreKey = -1;
     for (const [key, value] of Object.entries(projects)) {
-      
+      const comparisonValue = this.compareProjectWithUser(value, user);
+      if (maxScore < comparisonValue) {
+        maxScore = comparisonValue;
+        maxScoreKey = key; 
+      }
     }
+    return maxScoreKey;
   }
 
   // DB REFERENCES
@@ -167,6 +179,22 @@ class FirebaseSvc {
    */
    projectRef(params) {
     return ref(db, `Projects/${params}`);
+  }
+
+  // HELPERS
+  compareProjectWithUser = (project, user) => {
+    let score = 0;
+    skillList.forEach((skill) => {
+      if (skill in user && skill in project) {
+        score++;
+      }
+    });
+    prefList.forEach((pref) => {
+      if (pref in user && pref in project) {
+        score++;
+      }
+    });
+    return score;
   }
 }
 

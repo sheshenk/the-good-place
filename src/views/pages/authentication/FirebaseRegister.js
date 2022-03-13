@@ -67,7 +67,7 @@ const FirebaseRegister = ({ ...others }) => {
             skills.forEach(skill => user[skill] = true);
             prefs.forEach(pref => user[pref] = true);
             firebaseSvc.addUserToDb(user);
-            registerSuccess();
+            registerSuccess(user);
         },
         registerFailure);
 
@@ -77,9 +77,9 @@ const FirebaseRegister = ({ ...others }) => {
     /**
      * Callback Function if the register is successful.
      */
-    const registerSuccess = () => {
+    const registerSuccess = (user) => {
         console.log("Account successfully created!");
-        firebaseSvc.matchProjectCurrentUser();
+        firebaseSvc.matchProjectCurrentUser(user);
         window.location.href = "/";
         //TODO: Match with Project
         //TODO: Redirect to dashboard
