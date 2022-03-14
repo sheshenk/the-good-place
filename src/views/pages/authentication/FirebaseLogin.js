@@ -11,6 +11,7 @@ import {
 
 // project imports
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
+import { width } from '@mui/system';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 //TODO: Separate Email Text Field from Password Text Field
@@ -112,33 +113,38 @@ const FirebaseLogin = ({ ...others }) => {
                         }
                     </Typography>
                 }
-                <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+                <form noValidate autoComplete="off" onSubmit={handleSubmit} textAlign='center'>
+                    <center>
                     <TextField
                     id="login-email"
                     label="Email Address"
-                    variant="filled"
+                    variant="outlined"
                     type="email"
                     onChange={(event) => setEmail(event.target.value)}
+                    style={{width:'70%', margin: 10}}
                     />
                     <TextField
                     id="login-password"
                     label="Password"
                     type="password"
-                    variant="filled"
+                    variant="outlined"
                     onChange={(event) => setPassword(event.target.value)}
+                    style={{width:'70%', margin: 10}}
                     />
                     <Button
                     color='inherit'
                     size = 'large'
                     sx = {{
                         margin: '2%',
-                        height: 50
+                        height: 50,
+                        width:`35%`
                     }}
                     variant = 'outlined'
                     type = 'submit'
                     >
                         Sign In
                     </Button>
+                    </center>
                 </form>
             </Grid>
         </>

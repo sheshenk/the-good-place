@@ -1,15 +1,19 @@
 import PropTypes from 'prop-types';
 
 // material-ui
-import { Box, Card, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import { Avatar, CardActions, CardHeader, CardMedia, IconButton, Link } from '@mui/material';
+
 
 // project imports
 import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
 import SecondaryAction from 'ui-component/cards/CardSecondaryAction';
 import { gridSpacing } from 'store/constant';
-import { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
+import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
 import { Navigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { ShareOutlined, StarBorder } from '@mui/icons-material';
 
 // ===============================|| COLOR BOX ||=============================== //
 
@@ -58,10 +62,64 @@ ColorBox.propTypes = {
 
 // ===============================|| UI COLOR ||=============================== //
 
+const StoriesCard = (props) => {
+    return (
+        <Grid item xs={3}>
+            <a href={props.href}>
+            <Card sx={{ maxWidth: 345 }}>
+                <CardHeader
+                    title={props.title}
+                    subheader={props.date}
+                />
+                <CardMedia
+                    component="img"
+                    height="194"
+                    image={props.img}
+                    alt=""
+                />
+                <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                        {props.desc}
+                    </Typography>
+                </CardContent>
+                <CardActions disableSpacing>
+                    <IconButton aria-label="add project">
+                        <StarBorder />
+                    </IconButton>
+                    <IconButton aria-label="share">
+                        <ShareOutlined />
+                    </IconButton>
+                </CardActions>
+            </Card>
+            </a>
+        </Grid>
+    );
+}
+
 const Stories = () => {
     const { loggedIn, checkingStatus } = useAuthListener();
 
-    if (!loggedIn) return <Navigate to='/pages/login/login3'/>
+    const [projs, setProjs] = useState([])
+
+    useEffect(() => {
+        const getProjs = async () => {
+            const projs = await firebaseSvc.allStoriesFromDb((snapshot) => {
+                let projs = snapshot.val()
+                setProjs(Object.values(projs))
+            })
+        }
+        getProjs()
+    }, [])
+
+    if (!loggedIn) return <Navigate to='/pages/login/login3' />
+
+    return (
+        <Grid container spacing={4}>
+            {
+                projs.map(proj => <StoriesCard {...proj} />)
+            }
+        </Grid>
+    )
 
     return (
         <MainCard title="Color Palette" secondary={<SecondaryAction link="https://next.material-ui.com/system/palette/" />}>

@@ -50,16 +50,25 @@ const ProjectCard = (props) => {
 const ForYou = () => {
 
     const { loggedIn, checkingStatus } = useAuthListener();
+    const [projs, setProjs] = useState([])
+
+    useEffect(() => {
+        const getProjs = async () => {
+            const projs = await firebaseSvc.allProjectsFromDb((snapshot) => {
+                let projs = snapshot.val()
+                setProjs(Object.values(projs))
+            })
+        }
+        getProjs()
+    }, [])
 
     if (!loggedIn) return <Navigate to='/pages/login/login3' />
 
-    const projs = firebaseSvc.allProjectsFromDb().then((response) => console.log(response))
-
     return (
         <Grid container spacing={4}>
-            <ProjectCard title='Wash a Child' date='2 hours ago' img='https://randomwordgenerator.com/img/picture-generator/51e6dd444a54b10ff3d8992cc12c30771037dbf85254794e732f7bd49344_640.jpg' desc='Project 1' />
-            <ProjectCard title='Wash a Cow' date='Yesterday' img='https://randompicturegenerator.com/img/love-generator/g37162edefdbabbc82b1ccfa6fb1d0d9ddcfc6da100fc8dbf40d0fbd8621ed245b1d92b729fb11c1cd9fe6bcb4535c71b_640.jpg' desc='Project 2' />
-            <ProjectCard title='Wash your Mouth' date='3 days ago' img='https://randompicturegenerator.com/img/love-generator/g186ab2762497481beec6840cbd4d092ba96557798db32eb957c428f3583bcc209fe9e86653edc6557b72c53f385306a1_640.jpg' desc='Project 3' />
+            {
+                projs.map(proj => <ProjectCard {...proj} />)
+            }
         </Grid>
     )
 

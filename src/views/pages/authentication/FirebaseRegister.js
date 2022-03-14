@@ -78,7 +78,7 @@ const FirebaseRegister = ({ ...others }) => {
      */
     const registerSuccess = (user) => () => {
         console.log("Account successfully created!");
-        // firebaseSvc.matchProjectCurrentUser(user);
+        firebaseSvc.matchProjectCurrentUser(user);
         window.location.href = "/";
     };
 
@@ -154,24 +154,28 @@ const FirebaseRegister = ({ ...others }) => {
                     </Typography>
                 }
                 <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+                    <center>
                     <TextField
                     id="register-name"
                     label="Name"
-                    variant="filled"
+                    variant="outlined"
                     onChange={(event) => setUsername(event.target.value)}
+                    style={{width:'80%', margin: 10}}
                     />
                     <TextField
                     id="register-email"
                     label="Email Address"
-                    variant="filled"
+                    variant="outlined"
                     type="email"
                     onChange={(event) => setEmail(event.target.value)}
+                    style={{width:'80%', margin: 10}}
                     />
                     <TextField
                     id="register-password"
                     label="Password"
                     type="password"
-                    variant="filled"
+                    variant="outlined"
+                    style={{width:'80%', margin: 10}}
                     onChange={(event) => {
                         changePassword(event.target.value);
                         setPassword(event.target.value);
@@ -180,7 +184,7 @@ const FirebaseRegister = ({ ...others }) => {
                     {/* Password Strength Checker */}
                     {strength !== 0 && (
                                 <FormControl fullWidth>
-                                    <Box sx={{ mb: 2 }}>
+                                    <Box sx={{ mb: 2, ml: 33 }}>
                                         <Grid container spacing={2} alignItems="center">
                                             <Grid item>
                                                 <Box
@@ -197,6 +201,7 @@ const FirebaseRegister = ({ ...others }) => {
                                     </Box>
                                 </FormControl>
                     )}
+                    <Divider/>
                     <Grid item xs={12} container alignItems="center" justifyContent="center">
                         <Box sx={{ mb: 2, mt: 2 }}>
                             <Typography variant="subtitle1">Share what you're great at!</Typography>
@@ -205,10 +210,12 @@ const FirebaseRegister = ({ ...others }) => {
                     <Select
                         id="register-skills"
                         multiple
+                        label="Skills"
                         value={skills}
                         onChange={handleSkillsChange}
                         renderValue={(selected) => selected.join(', ')}
                         input={<OutlinedInput label="Skills"/>}
+                        style={{width:'70%', margin: 10}}
                     >
                         {skillList.map((skillName) => (
                             <MenuItem
@@ -223,11 +230,13 @@ const FirebaseRegister = ({ ...others }) => {
                         id='register-otherskills'
                         label="Other Skills to Share"
                         type='text'
-                        variant='filled'
+                        variant='outlined'
+                        style={{width:'70%', margin: 10, marginBottom: 20}}
                         onChange={(event) => {
                             setOther(event.target.value);
                         }}
                     />
+                    <Divider/>
                     <Grid item xs={12} container alignItems="center" justifyContent="center">
                         <Box sx={{ mb: 2, mt: 2 }}>
                             <Typography variant="subtitle1">Project Working Preferences</Typography>
@@ -240,6 +249,8 @@ const FirebaseRegister = ({ ...others }) => {
                         onChange={handlePrefsChange}
                         renderValue={(selected) => selected.join(', ')}
                         input={<OutlinedInput label="Preferences"/>}
+                        style={{width:'70%', margin: 10, marginBottom: 20}}
+                        
                     >
                         {prefList.map((pref) => (
                             <MenuItem
@@ -250,18 +261,23 @@ const FirebaseRegister = ({ ...others }) => {
                             </MenuItem>
                         ))}
                     </Select>
+                    <Divider/>
                     <Button
                     color='inherit'
                     size = 'large'
                     sx = {{
+                        
                         margin: '2%',
-                        height: 50
+                        mt: 3,
+                        height: 50,
+                        width:`35%`
                     }}
                     variant = 'outlined'
                     type = 'submit'
                     >
                         Sign Up
                     </Button>
+                    </center>
                 </form>
             </Grid>
 

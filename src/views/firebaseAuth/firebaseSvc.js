@@ -150,6 +150,11 @@ class FirebaseSvc {
     return onValue(projectRef, callback);
   }
 
+  allStoriesFromDb = async(callback) => {
+    const storiesRef = this.storiesRef('');
+    return onValue(storiesRef, callback);
+  }
+
   userProjectFromDb = async() => {
     const userRef = this.userRef(auth.currentUser.uid);
     const projectId = await onValue(userRef, (snapshot) => snapshot.val().project, {onlyOnce: true});
@@ -163,6 +168,7 @@ class FirebaseSvc {
       let maxScore = 0;
       let maxScoreKey = -1;
       for (const [key, value] of Object.entries(projs)) {
+        console.log(user);
         const comparisonValue = await this.compareProjectWithUser(value, user);
         if (maxScore < comparisonValue) {
           maxScore = comparisonValue;
@@ -194,12 +200,11 @@ class FirebaseSvc {
     }
   }
   
-  getHours = async () => {
+  getHours = async (callback) => {
     const user = auth.currentUser
     if (user) {
       const userRef = this.userRef(`${user.uid}/hours`)
-      const hours = await onValue(userRef, (snapshot) => snapshot.val())
-      return hours
+      return onValue(userRef, callback)
     }
     return false
   }
@@ -229,6 +234,10 @@ class FirebaseSvc {
    */
    projectRef(params) {
     return ref(db, `Projects/${params}`);
+  }
+
+  storiesRef(params) {
+    return ref(db, `Stories/${params}`);
   }
 
   // HELPERS

@@ -70,6 +70,20 @@ const EarningCard = ({ isLoading }) => {
         setAnchorEl(null);
     };
 
+    const [hours, setHours] = useState(0)
+
+    useEffect(() => {
+        const getHours = async () => {
+            const hours = await firebaseSvc.getHours((snapshot) => {
+                let hours = snapshot.val()
+                console.log(hours)
+                setHours(hours)
+            })
+        }
+        getHours()
+    }, [])
+
+
     return (
         <>
             {isLoading ? (
@@ -145,7 +159,7 @@ const EarningCard = ({ isLoading }) => {
                                 <Grid container alignItems="center">
                                     <Grid item>
                                         <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                            22
+                                            {hours}
                                         </Typography>
                                     </Grid>
                                     <Grid item>
