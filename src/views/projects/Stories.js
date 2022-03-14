@@ -31,7 +31,7 @@ const StoriesCard = (props) => {
                     />
                     <CardContent>
                         <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
-                            by {props.author}
+                            {props.author == '' ? "" : `By ${props.author}`}
                         </Typography>
                         <Typography variant="body2" color="#000">
                             {props.desc}
@@ -160,7 +160,7 @@ const Stories = () => {
             </MainCard>
             <Grid container spacing={2}>
                 {
-                    projs.map(proj => <StoriesCard {...proj} />)
+                    projs.reverse().map(proj => <StoriesCard {...proj} />)
                 }
             </Grid>
         </Box>
