@@ -11,7 +11,6 @@ import {
 
 // project imports
 import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
-import { width } from '@mui/system';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 //TODO: Separate Email Text Field from Password Text Field
