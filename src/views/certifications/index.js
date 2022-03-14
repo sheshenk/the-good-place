@@ -4,8 +4,11 @@ import React, {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Button, CardActionArea, CardActions, Grid } from '@mui/material';
-import firebaseSvc from 'views/firebaseAuth/firebaseSvc';
+import { Button, CardActionArea, CardActions, Grid, IconButton } from '@mui/material';
+import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
+import { ShareOutlined, StarBorder, FileDownload } from '@mui/icons-material';
+import { Navigate } from 'react-router';
+
 
 
 const Certificate = ({props}) => (
@@ -15,15 +18,12 @@ const Certificate = ({props}) => (
         <CardMedia
           component="img"
           height="194"
-          image=""
+          image={props.img}
           alt="certificate"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Name
-          </Typography>
-          <Typography variant="body2" color="text.primary">
-            Project: {props.project}
+            {props.project}
           </Typography>
           <Typography variant="body2" color="text.primary">
             Hours Contributed: {props.hours}
@@ -34,9 +34,12 @@ const Certificate = ({props}) => (
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
+          <IconButton aria-label="share">
+            <ShareOutlined />
+          </IconButton>
+          <IconButton aria-label="download">
+            <FileDownload />
+          </IconButton>
       </CardActions>
     </Card>
 
@@ -44,28 +47,39 @@ const Certificate = ({props}) => (
 );
 
 const Certifications = () => {
-    const [certificates, setCertificates] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const { loggedIn, checkingStatus } = useAuthListener();
 
-    useEffect(() => {
-      firebaseSvc.getAllCertificatesFromDb(
-        (snap) => {
-          const certificates = Object.values(snap.val());
-          setCertificates(certificates);
-          return () => firebaseSvc.certsRefOff();
-        }
-      );
-    }, []);
 
-    return (
-      <Grid item xs={3}>
-        {
-          certificates.map(cert => (
-            <Certificate props={cert}>
-            </Certificate>
-          ))
-        }
-      </Grid>
-
+  useEffect(() => {
+    firebaseSvc.getAllCertificatesFromDb(
+      (snap) => {
+        const certificates = Object.values(snap.val());
+        setCertificates(certificates);
+        return () => firebaseSvc.certsRefOff();
+      }
     );
+  }, []);
+
+  if (!loggedIn) return <Navigate to='/pages/login/login3' />
+
+
+  return (
+    <Container>
+      <Typography variant="h1" component="div" ml={2} my={3} gutterBottom>
+        Your Certificates
+      </Typography>
+    <Grid container justifyContent="space-evenly" alignItems="center">
+      {
+        certificates.map(cert => (
+          <Certificate props={cert}>
+          </Certificate>
+        ))
+      }
+    </Grid>
+
+    </Container>
+    
+  );
 };
 export default Certifications;
