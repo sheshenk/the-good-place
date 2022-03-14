@@ -1,20 +1,85 @@
 // material-ui
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { Button, CardActionArea, CardActions, Grid, IconButton } from '@mui/material';
+import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
+import { ShareOutlined, StarBorder, FileDownload } from '@mui/icons-material';
+import { Navigate } from 'react-router';
 
-// project imports
-import MainCard from 'ui-component/cards/MainCard';
 
-// ==============================|| SAMPLE PAGE ||============================== //
 
-const Certifications = () => (
-    <MainCard title="Sample Card">
-        <Typography variant="body2">
-            Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif
-            ad minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in
-            reprehended in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa
-            qui officiate descent molls anim id est labours.
-        </Typography>
-    </MainCard>
+const Certificate = ({props}) => (
+
+    <Card sx={{ maxWidth: 345}}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="194"
+          image={props.img}
+          alt="certificate"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            {props.project}
+          </Typography>
+          <Typography variant="body2" color="text.primary">
+            Hours Contributed: {props.hours}
+          </Typography>
+          <Typography variant="body2" color="text.primary">
+            Level of Achievement: {props.level}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+          <IconButton aria-label="share">
+            <ShareOutlined />
+          </IconButton>
+          <IconButton aria-label="download">
+            <FileDownload />
+          </IconButton>
+      </CardActions>
+    </Card>
+
+
 );
 
+const Certifications = () => {
+  const [certificates, setCertificates] = useState([]);
+  const { loggedIn, checkingStatus } = useAuthListener();
+
+
+  useEffect(() => {
+    firebaseSvc.getAllCertificatesFromDb(
+      (snap) => {
+        const certificates = Object.values(snap.val());
+        setCertificates(certificates);
+        return () => firebaseSvc.certsRefOff();
+      }
+    );
+  }, []);
+
+  if (!loggedIn) return <Navigate to='/pages/login/login3' />
+
+
+  return (
+    <Container>
+      <Typography variant="h1" component="div" ml={2} my={3} gutterBottom>
+        Your Certificates
+      </Typography>
+    <Grid container justifyContent="space-evenly" alignItems="center">
+      {
+        certificates.map(cert => (
+          <Certificate props={cert}>
+          </Certificate>
+        ))
+      }
+    </Grid>
+
+    </Container>
+    
+  );
+};
 export default Certifications;

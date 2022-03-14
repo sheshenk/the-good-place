@@ -218,6 +218,15 @@ class FirebaseSvc {
     return ref(db, `Certificates/${params}`);
   }
 
+  getAllCertificatesFromDb = async(callback) => {
+    const certRef = this.certificateRef('');
+    return onValue(certRef, callback)
+  }
+
+  certsRefOff() {
+    return this.certificateRef().off()
+  }
+
   /**
    * Get the reference to project object within the projects object within the database
    * @param {*} params id of object
