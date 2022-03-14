@@ -91,7 +91,7 @@ const Stories = () => {
 
     if (checkingStatus) return <CircularProgress/>
 
-    if (!loggedIn) return <Navigate to='/pages/login/login3' />
+    if (!loggedIn) return <Navigate to='/login' />
 
     return (
         <Box>

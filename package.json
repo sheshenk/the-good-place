@@ -1,10 +1,9 @@
 {
     "type": "module",
     "module":"commonjs",
-    "name": "berry-material-react-free",
+    "name": "the-good-place",
     "version": "3.0.1",
     "private": true,
-    "homepage": "https://berrydashboard.io/",
     "dependencies": {
         "@emotion/cache": "^11.4.0",
         "@emotion/react": "^11.4.0",

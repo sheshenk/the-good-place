@@ -1,12 +1,9 @@
 import dashboard from './dashboard';
-import pages from './pages';
 import projects from './projects';
-import other from './other';
-
-// ==============================|| MENU ITEMS ||============================== //
+import certifications from './certifications';
 
 const menuItems = {
-    items: [dashboard, projects, other]
+    items: [dashboard, projects, certifications]
 };
 
 export default menuItems;
