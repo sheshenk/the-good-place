@@ -110,7 +110,9 @@ return (
             <ShareOutlined />
           </IconButton>
           <IconButton aria-label="download">
-            <FileDownload />
+            <a href={props.img} download>
+              <FileDownload />
+            </a>
           </IconButton>
       </CardActions>
     </Card>
