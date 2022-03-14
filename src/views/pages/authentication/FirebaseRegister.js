@@ -79,7 +79,7 @@ const FirebaseRegister = ({ ...others }) => {
      */
     const registerSuccess = (user) => () => {
         console.log("Account successfully created!");
-        // firebaseSvc.matchProjectCurrentUser(user);
+        firebaseSvc.matchProjectCurrentUser(user);
         window.location.href = "/";
     };
 
