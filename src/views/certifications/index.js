@@ -1,19 +1,19 @@
 // material-ui
-import { Container, Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Button, CardActionArea, CardActions, Grid, IconButton } from '@mui/material';
+import { CardActionArea, CardActions, Grid, IconButton } from '@mui/material';
 import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
-import { ShareOutlined, StarBorder, FileDownload } from '@mui/icons-material';
+import { ShareOutlined, FileDownload } from '@mui/icons-material';
 import { Navigate } from 'react-router';
 
 
 
 const Certificate = ({props}) => (
-
-    <Card sx={{ maxWidth: 345}}>
+<Grid item xs={3}>
+    <Card sx={{ width:'100%'}}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -43,7 +43,7 @@ const Certificate = ({props}) => (
       </CardActions>
     </Card>
 
-
+</Grid>
 );
 
 const Certifications = () => {
@@ -61,15 +61,19 @@ const Certifications = () => {
     );
   }, []);
 
+  if (checkingStatus) return <CircularProgress/>
+
   if (!loggedIn) return <Navigate to='/pages/login/login3' />
 
 
   return (
-    <Container>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
       <Typography variant="h1" component="div" ml={2} my={3} gutterBottom>
         Your Certificates
       </Typography>
-    <Grid container justifyContent="space-evenly" alignItems="center">
+      </Grid>
+    
       {
         certificates.map(cert => (
           <Certificate props={cert}>
@@ -78,7 +82,6 @@ const Certifications = () => {
       }
     </Grid>
 
-    </Container>
     
   );
 };

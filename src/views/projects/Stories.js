@@ -1,6 +1,6 @@
 
 // material-ui
-import { Alert, Box, Button, Card, CardContent, Grid, Snackbar, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Snackbar, TextField, Typography } from '@mui/material';
 import { CardActions, CardHeader, CardMedia, IconButton } from '@mui/material';
 
 
@@ -9,7 +9,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
 import { Navigate } from 'react-router';
 import { useEffect, useState } from 'react';
-import { ShareOutlined, StarBorder } from '@mui/icons-material';
+import { ShareOutlined } from '@mui/icons-material';
 import { IconHeart } from '@tabler/icons';
 
 
@@ -31,7 +31,7 @@ const StoriesCard = (props) => {
                     />
                     <CardContent>
                         <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
-                            {props.author == '' ? "" : `By ${props.author}`}
+                            {props.author === '' ? "" : `By ${props.author}`}
                         </Typography>
                         <Typography variant="body2" color="#000">
                             {props.desc}
@@ -54,7 +54,7 @@ const StoriesCard = (props) => {
 const Stories = () => {
     const { loggedIn, checkingStatus } = useAuthListener();
 
-    const [projs, setProjs] = useState([])
+    const [stories, setStories] = useState([])
 
     const [title, setTitle] = useState('')
     const [img, setImg] = useState('')
@@ -80,14 +80,16 @@ const Stories = () => {
     }
 
     useEffect(() => {
-        const getProjs = async () => {
-            const projs = await firebaseSvc.allStoriesFromDb((snapshot) => {
-                let projs = snapshot.val()
-                setProjs(Object.values(projs))
+        const getStories = async () => {
+            await firebaseSvc.allStoriesFromDb((snapshot) => {
+                let stories = snapshot.val()
+                setStories(Object.values(stories))
             })
         }
-        getProjs()
+        getStories()
     }, [])
+
+    if (checkingStatus) return <CircularProgress/>
 
     if (!loggedIn) return <Navigate to='/pages/login/login3' />
 
@@ -160,7 +162,7 @@ const Stories = () => {
             </MainCard>
             <Grid container spacing={2}>
                 {
-                    projs.reverse().map(proj => <StoriesCard {...proj} />)
+                    stories.reverse().map(proj => <StoriesCard {...proj} />)
                 }
             </Grid>
         </Box>
