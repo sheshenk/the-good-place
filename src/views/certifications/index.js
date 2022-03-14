@@ -1,24 +1,19 @@
 // material-ui
-import { Container, Typography } from '@mui/material';
+import { CircularProgress, Container, Typography } from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Button, CardActionArea, CardActions, Grid, IconButton } from '@mui/material';
+import { CardActionArea, CardActions, Grid, IconButton } from '@mui/material';
 import firebaseSvc, { useAuthListener } from 'views/firebaseAuth/firebaseSvc';
-import { ShareOutlined, StarBorder, FileDownload } from '@mui/icons-material';
+import { ShareOutlined, FileDownload } from '@mui/icons-material';
 import { Navigate } from 'react-router';
-import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 
-
-
-const BootstrapDialog = Dialog
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
@@ -76,7 +71,7 @@ return (
           {props.project}
         </BootstrapDialogTitle>
         <DialogContent dividers>
-        <img src={props.img} alt="image" height={600}/>
+        <img src={props.img} alt="cert" height={600}/>
           <Typography gutterBottom>
             Hours Contributed: {props.hours}
           </Typography>
