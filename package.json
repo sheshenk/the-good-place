@@ -1,9 +1,7 @@
 {
-    "homepage": "https://github.com/sheshenk/the-good-place",
-    "type": "module",
-    "module": "commonjs",
+    "homepage": ".",
     "name": "the-good-place",
-    "version": "3.0.1",
+    "version": "0.1.0",
     "private": true,
     "dependencies": {
         "@emotion/cache": "^11.4.0",
