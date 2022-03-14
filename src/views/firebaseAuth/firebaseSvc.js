@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from './firebaseDetails.js';
-import { getDatabase, ref, set, update, onValue, get } from "firebase/database";
+import { getDatabase, ref, set, update, onValue, get, push } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from 'react';
 import { prefList, skillList } from "../utilities/Constants.js";
@@ -228,6 +228,11 @@ class FirebaseSvc {
 
   storiesRef(params) {
     return ref(db, `Stories/${params}`);
+  }
+
+  addStoryToDb(data) {
+    const storyRef = this.storiesRef('')
+    push(storyRef, data)
   }
 
   // HELPERS
