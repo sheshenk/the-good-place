@@ -62,9 +62,12 @@ const Stories = () => {
     const [externalLink, setExternalLink] = useState('')
     const [open, setOpen] = useState(false)
 
+    const [inputsDisabled, setInputsDisabled] = useState(false)
+
     const handleSubmit = (e) => {
         e.preventDefault()
         if (title && body) {
+            setInputsDisabled(true)
             const data = {
                 'title': title,
                 'img': img,
@@ -83,7 +86,7 @@ const Stories = () => {
         const getStories = async () => {
             await firebaseSvc.allStoriesFromDb((snapshot) => {
                 let stories = snapshot.val()
-                setStories(Object.values(stories))
+                setStories(Object.values(stories).reverse())
             })
         }
         getStories()
@@ -108,6 +111,7 @@ const Stories = () => {
                         </Grid>
                         <Grid item xs={5}>
                             <TextField
+                            disabled={inputsDisabled}
                                 variant='outlined'
                                 style={{ width: '100%' }}
                                 label="Image URL"
@@ -116,6 +120,7 @@ const Stories = () => {
                         </Grid>
                         <Grid item xs={5}>
                             <TextField
+                            disabled={inputsDisabled}
                                 variant='outlined'
                                 style={{ width: '100%' }}
                                 label="Link to another page"
@@ -124,6 +129,7 @@ const Stories = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                            disabled={inputsDisabled}
                                 variant='outlined'
                                 style={{ width: '100%' }}
                                 label="Content"
@@ -133,6 +139,7 @@ const Stories = () => {
                             />
                         </Grid>
                         <Button
+                        disabled={inputsDisabled}
                             color='inherit'
                             size='large'
                             sx={{
@@ -145,7 +152,7 @@ const Stories = () => {
                             variant='outlined'
                             type='submit'
                         >
-                            Sign Up
+                            Post
                         </Button>
                     </Grid>
                 </form>
@@ -162,7 +169,7 @@ const Stories = () => {
             </MainCard>
             <Grid container spacing={2}>
                 {
-                    stories.reverse().map(proj => <StoriesCard {...proj} />)
+                    stories.map(proj => <StoriesCard {...proj} />)
                 }
             </Grid>
         </Box>
