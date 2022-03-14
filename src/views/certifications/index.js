@@ -137,7 +137,7 @@ const Certifications = () => {
   if (!loggedIn) return <Navigate to='/login' />
 
   return (
-    <Grid container spacing={4}>
+    <Grid container spacing={2}>
       <Grid item xs = {12}>
       <Typography variant="h1" component="div" ml={2} my={3} gutterBottom>
         Your Certificates

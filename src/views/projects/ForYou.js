@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 const ProjectCard = (props) => {
     return (
         <Grid item xs={3}>
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{ width: '100%' }}>
                 <CardHeader
                     title={props.title}
                     subheader={props.date}
@@ -61,7 +61,7 @@ const ForYou = () => {
     if (!loggedIn) return <Navigate to='/login' />
 
     return (
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
             <Grid item xs={12}>
             <Typography variant="h1" component="div" ml={2} my={2} gutterBottom>
                 For You
