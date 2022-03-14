@@ -103,7 +103,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                                             <Typography variant="subtitle2">Total Hours Volunteered</Typography>
                                         </Grid>
                                         <Grid item>
-                                            <Typography variant="h3">142 hours</Typography>
+                                            <Typography variant="h3">0 hours</Typography>
                                         </Grid>
                                     </Grid>
                                 </Grid>

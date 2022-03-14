@@ -68,7 +68,6 @@ const chartData = {
     series: [
         {
             name: 'Monthly Hours',
-            data: [13, 10, 12, 4, 8, 10, 7, 6, 20, 21, 17, 14]
         }
 
     ]

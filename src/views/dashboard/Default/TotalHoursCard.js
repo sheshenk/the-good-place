@@ -150,7 +150,7 @@ const TotalHoursCard = ({ isLoading }) => {
                                         color: theme.palette.secondary[200]
                                     }}
                                 >
-                                    Total Hours Worked
+                                    Hours Volunteered this Month
                                 </Typography>
                             </Grid>
                         </Grid>
