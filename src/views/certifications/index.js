@@ -59,7 +59,7 @@ const Certificate = ({props}) => {
 
 
 return (
-  <div>
+    <Grid item xs={3}>
     <Dialog
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
@@ -80,7 +80,8 @@ return (
           </Typography>
         </DialogContent>
       </Dialog>
-    <Card sx={{ maxWidth: 345}}>
+      
+    <Card sx={{ width: '100%'}}>
       <CardActionArea onClick={handleClickOpen}>
         <CardMedia
           component="img"
@@ -111,8 +112,7 @@ return (
           </IconButton>
       </CardActions>
     </Card>
-    </div>
-
+    </Grid>
 
 );
 }
@@ -137,11 +137,13 @@ const Certifications = () => {
   if (!loggedIn) return <Navigate to='/login' />
 
   return (
-    <Container>
+    <Grid container spacing={4}>
+      <Grid item xs = {12}>
       <Typography variant="h1" component="div" ml={2} my={3} gutterBottom>
         Your Certificates
       </Typography>
-    <Grid container justifyContent="space-evenly" alignItems="center">
+      </Grid>
+    
       {
         certificates.map(cert => (
           <Certificate props={cert}>
@@ -149,8 +151,6 @@ const Certifications = () => {
         ))
       }
     </Grid>
-
-    </Container>
     
   );
 };
