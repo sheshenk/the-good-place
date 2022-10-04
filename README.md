@@ -38,3 +38,6 @@ The stories page highlights stories and experiences of how the various volunteer
 The certifications page allows our users to view, download and share certifications that they have obtained through volunteering. Volunteers who have contributed meaningfully to their project are also allowed to request for Certificates. 
 
 ![image](https://user-images.githubusercontent.com/77235299/158168389-41c7ba11-9eb0-4bc4-bbd9-d53daebe4c67.png)
+
+## Credits
+The good place design uses [Material UI's Berry template](https://mui.com/store/items/berry-react-material-admin/). 
