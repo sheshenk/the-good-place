@@ -1,4 +1,4 @@
-import { IconCertificate } from '@tabler/icons';
+import { IconCertificate, IconPencil } from '@tabler/icons';
 
 const icons = { IconCertificate };
 
@@ -15,6 +15,14 @@ const certifications = {
             icon: icons.IconCertificate,
             breadcrumbs: false
         },
+        {
+            id: 'applycert',
+            title: 'Apply for Certification',
+            type: 'item',
+            url: '/certifications/apply',
+            icon: IconPencil,
+            breadcrumbs: false
+        }
     ]
 };
 

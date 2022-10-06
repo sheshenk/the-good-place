@@ -84,9 +84,11 @@ const Stories = () => {
 
     useEffect(() => {
         const getStories = async () => {
-            await firebaseSvc.allStoriesFromDb((snapshot) => {
-                let stories = snapshot.val()
-                setStories(Object.values(stories).reverse())
+            await firebaseSvc.allStoriesFromDb((snap) => {
+                let stories = snap.val()
+                if (stories !== undefined && stories !== null) {
+                    setStories(Object.values(stories).reverse())
+                }
             })
         }
         getStories()

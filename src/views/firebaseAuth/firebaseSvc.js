@@ -220,6 +220,11 @@ class FirebaseSvc {
     return onValue(certRef, callback)
   }
 
+  getUserCertificatesFromDb = async(callback, uid) => {
+    const certRef = this.certificateRef(uid);
+    return onValue(certRef, callback)
+  }
+
   certsRefOff() {
     return this.certificateRef().off()
   }
@@ -240,6 +245,11 @@ class FirebaseSvc {
   addStoryToDb(data) {
     const storyRef = this.storiesRef('')
     push(storyRef, data)
+  }
+
+  addCertToDb(data) {
+    const certRef = this.certificateRef(auth.currentUser.uid)
+    push(certRef, data)
   }
 
   // HELPERS
