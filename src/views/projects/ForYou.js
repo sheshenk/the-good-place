@@ -48,9 +48,12 @@ const ForYou = () => {
 
     useEffect(() => {
         const getProjs = async () => {
-            await firebaseSvc.allProjectsFromDb((snapshot) => {
-                let projs = snapshot.val()
-                setProjs(Object.values(projs))
+            await firebaseSvc.allProjectsFromDb((snap) => {
+                if (snap.val() !== undefined && snap.val() !== null) {
+                    const projs = Object.values(snap.val());
+                    setProjs(projs);
+                    return () => firebaseSvc.projectsRefOff();
+                }
             })
         }
         getProjs()
@@ -68,7 +71,7 @@ const ForYou = () => {
             </Typography>
             </Grid>
             {
-                projs.map(proj => <ProjectCard {...proj} />)
+                projs.map(proj => <ProjectCard props={proj} />)
             }
         </Grid>
     )

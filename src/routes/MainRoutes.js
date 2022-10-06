@@ -13,6 +13,7 @@ const StoriesPage = Loadable(lazy(() => import('views/projects/Stories')));
 
 // sample page routing
 const CertificationsPage = Loadable(lazy(() => import('views/certifications')));
+const CertApplicationPage = Loadable(lazy(() => import('views/certifications/application')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -39,6 +40,10 @@ const MainRoutes = {
         {
             path: '/certifications',
             element: <CertificationsPage />
+        },
+        {
+            path: '/certifications/apply',
+            element: <CertApplicationPage />
         }
     ]
 };

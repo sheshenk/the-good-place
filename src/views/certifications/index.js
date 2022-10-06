@@ -13,6 +13,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
+import { getAuth } from 'firebase/auth';
+import {useNavigate} from 'react-router-dom';
+
 
 
 const BootstrapDialogTitle = (props) => {
@@ -106,7 +109,7 @@ return (
             <ShareOutlined />
           </IconButton>
           <IconButton aria-label="download">
-            <a href={props.img} download>
+            <a href={props.img} target="_blank" rel="noopener noreferrer">
               <FileDownload />
             </a>
           </IconButton>
@@ -120,17 +123,34 @@ return (
 const Certifications = () => {
   const [certificates, setCertificates] = useState([]);
   const { loggedIn, checkingStatus } = useAuthListener();
+  const auth = getAuth();
+  const navigate = useNavigate();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    return navigate('/certifications/apply');
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 
   useEffect(() => {
-    firebaseSvc.getAllCertificatesFromDb(
-      (snap) => {
-        const certificates = Object.values(snap.val());
-        setCertificates(certificates);
-        return () => firebaseSvc.certsRefOff();
-      }
-    );
-  }, []);
+    if(auth.currentUser) {
+      const uid = auth.currentUser.uid;
+      firebaseSvc.getUserCertificatesFromDb(
+        (snap) => {
+          const certificates = Object.values(snap.val());
+          setCertificates(certificates);
+          return () => firebaseSvc.certsRefOff();
+        }
+      , uid);
+    } else {
+    };
+  }, [auth.currentUser]);
+  
+
 
   if (checkingStatus) return <CircularProgress/>
 
@@ -142,6 +162,31 @@ const Certifications = () => {
       <Typography variant="h1" component="div" ml={2} my={3} gutterBottom>
         Your Certificates
       </Typography>
+      <button onClick={handleClickOpen}>
+        Apply for new certificate
+      </button>
+      
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        fullWidth={true}
+        maxWidth={'md'}
+      >
+        <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Certificate Application
+        </BootstrapDialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+            Hours Contributed:
+          </Typography>
+          <Typography gutterBottom>
+            Level of Achievement:
+          </Typography>
+        </DialogContent>
+      </Dialog>
+
+
       </Grid>
     
       {
